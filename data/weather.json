@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-10T13:09:46Z",
-  "last_attempt_at": "2026-11-10T13:09:46Z",
-  "last_success_at": null,
-  "status": "unavailable",
+  "generated_at": "2026-11-10T13:40:14Z",
+  "last_attempt_at": "2026-11-10T13:40:14Z",
+  "last_success_at": "2026-11-10T13:40:14Z",
+  "status": "ok",
   "provider": {
     "name": "Open-Meteo (tham khảo, không phải nguồn chính thức Việt Nam)",
     "url": "https://open-meteo.com/",
@@ -18,64 +18,96 @@
       "longitude": 105.8542
     },
     {
-      "id": "tp-ho-chi-minh",
-      "name": "TP. Hồ Chí Minh",
-      "latitude": 10.8231,
-      "longitude": 106.6297
-    },
-    {
       "id": "da-nang",
       "name": "Đà Nẵng",
       "latitude": 16.0544,
       "longitude": 108.2022
     },
     {
-      "id": "hai-phong",
-      "name": "Hải Phòng",
-      "latitude": 20.8449,
-      "longitude": 106.6881
-    },
-    {
-      "id": "can-tho",
-      "name": "Cần Thơ",
-      "latitude": 10.0452,
-      "longitude": 105.7469
-    },
-    {
-      "id": "hue",
-      "name": "Huế",
-      "latitude": 16.4637,
-      "longitude": 107.5909
-    },
-    {
-      "id": "lao-cai",
-      "name": "Lào Cai",
-      "latitude": 22.4809,
-      "longitude": 103.9755
-    },
-    {
-      "id": "nghe-an",
-      "name": "Nghệ An",
-      "latitude": 18.6796,
-      "longitude": 105.6813
-    },
-    {
-      "id": "khanh-hoa",
-      "name": "Khánh Hòa",
-      "latitude": 12.2388,
-      "longitude": 109.1967
-    },
-    {
-      "id": "an-giang",
-      "name": "An Giang",
-      "latitude": 10.5216,
-      "longitude": 105.1259
+      "id": "tp-ho-chi-minh",
+      "name": "TP. Hồ Chí Minh",
+      "latitude": 10.8231,
+      "longitude": 106.6297
     }
   ],
-  "weather": [],
+  "weather": [
+    {
+      "id": "ha-noi",
+      "name": "Hà Nội",
+      "latitude": 21.0285,
+      "longitude": 105.8542,
+      "source_name": "Open-Meteo (tham khảo, không phải nguồn chính thức Việt Nam)",
+      "source_url": "https://open-meteo.com/",
+      "fetched_at": "2026-11-10T13:40:14Z",
+      "published_at": "2026-11-10T20:30",
+      "stale": false,
+      "current": {
+        "temperature_c": 16.5,
+        "relative_humidity_percent": 81,
+        "apparent_temperature_c": 16.4,
+        "precipitation_mm": 0.0,
+        "weather_code": 0,
+        "wind_speed_kmh": 7.6,
+        "wind_direction_degrees": 304
+      },
+      "daily": {
+        "temperature_max_c": 19.6,
+        "temperature_min_c": 15.4,
+        "precipitation_probability_max_percent": 71
+      }
+    },
+    {
+      "id": "da-nang",
+      "name": "Đà Nẵng",
+      "latitude": 16.0544,
+      "longitude": 108.2022,
+      "source_name": "Open-Meteo (tham khảo, không phải nguồn chính thức Việt Nam)",
+      "source_url": "https://open-meteo.com/",
+      "fetched_at": "2026-11-10T13:40:14Z",
+      "published_at": "2026-11-10T20:30",
+      "stale": false,
+      "current": {
+        "temperature_c": 24.9,
+        "relative_humidity_percent": 77,
+        "apparent_temperature_c": 24.9,
+        "precipitation_mm": 0.2,
+        "weather_code": 53,
+        "wind_speed_kmh": 28.5,
+        "wind_direction_degrees": 21
+      },
+      "daily": {
+        "temperature_max_c": 25.2,
+        "temperature_min_c": 23.0,
+        "precipitation_probability_max_percent": 100
+      }
+    },
+    {
+      "id": "tp-ho-chi-minh",
+      "name": "TP. Hồ Chí Minh",
+      "latitude": 10.8231,
+      "longitude": 106.6297,
+      "source_name": "Open-Meteo (tham khảo, không phải nguồn chính thức Việt Nam)",
+      "source_url": "https://open-meteo.com/",
+      "fetched_at": "2026-11-10T13:40:14Z",
+      "published_at": "2026-11-10T20:30",
+      "stale": false,
+      "current": {
+        "temperature_c": 26.7,
+        "relative_humidity_percent": 92,
+        "apparent_temperature_c": 33.0,
+        "precipitation_mm": 0.0,
+        "weather_code": 3,
+        "wind_speed_kmh": 3.7,
+        "wind_direction_degrees": 305
+      },
+      "daily": {
+        "temperature_max_c": 34.3,
+        "temperature_min_c": 24.5,
+        "precipitation_probability_max_percent": 100
+      }
+    }
+  ],
   "storms": [],
   "warnings": [],
-  "errors": [
-    "Không lấy được dữ liệu thời tiết: <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1147)>"
-  ]
+  "errors": []
 }
