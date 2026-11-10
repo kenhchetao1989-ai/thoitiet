@@ -7,7 +7,7 @@ import random
 import ssl
 import sys
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
@@ -24,10 +24,28 @@ LOCATIONS = [
 ]
 MAX_ATTEMPTS = 4
 TIMEOUT_SECONDS = 20
+BULLETIN_RETENTION = timedelta(hours=24)
+
+
+def now_utc():
+    return datetime.now(timezone.utc)
 
 
 def now_iso():
-    return datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
+    return now_utc().isoformat(timespec="seconds").replace("+00:00", "Z")
+
+
+def parse_datetime(value):
+    """Parse an ISO-8601 timestamp; return None for missing or invalid values."""
+    if not isinstance(value, str) or not value.strip():
+        return None
+    try:
+        parsed = datetime.fromisoformat(value.strip().replace("Z", "+00:00"))
+        if parsed.tzinfo is None:
+            parsed = parsed.replace(tzinfo=timezone.utc)
+        return parsed.astimezone(timezone.utc)
+    except ValueError:
+        return None
 
 
 def read_existing():
@@ -36,6 +54,60 @@ def read_existing():
         return value if isinstance(value, dict) else {}
     except (OSError, json.JSONDecodeError):
         return {}
+
+
+def retain_bulletins(new_items, old_items, fallback_timestamp, now):
+    """Merge bulletins and retain the last known reports for at most 24 hours.
+
+    `first_seen_at` is deliberately preserved, so repeated workflow runs without
+    a new report cannot keep extending an old bulletin's lifetime.
+    """
+    fallback_time = parse_datetime(fallback_timestamp)
+    now_text = now.isoformat(timespec="seconds").replace("+00:00", "Z")
+    merged = {}
+
+    def add(item, is_new):
+        if not isinstance(item, dict):
+            return
+        record = dict(item)
+        first_seen = (
+            parse_datetime(record.get("first_seen_at"))
+            or parse_datetime(record.get("published_at"))
+            or parse_datetime(record.get("issued_at"))
+            or parse_datetime(record.get("updated_at"))
+            or fallback_time
+        )
+        if first_seen is None:
+            # Timestamp legacy records once using the previous dataset generation
+            # time. If that is unavailable, do not claim the report is recent.
+            return
+        age = now - first_seen
+        if age > BULLETIN_RETENTION or age < -timedelta(minutes=5):
+            return
+
+        record["first_seen_at"] = first_seen.isoformat(timespec="seconds").replace("+00:00", "Z")
+        record["stale"] = not is_new
+        if is_new and not record.get("updated_at"):
+            record["updated_at"] = now_text
+
+        # Prefer an explicit provider ID; otherwise deduplicate by title/name.
+        key = str(record.get("id") or record.get("title") or record.get("name") or record.get("url") or "").strip()
+        if not key:
+            key = record["first_seen_at"]
+        previous = merged.get(key)
+        if previous is None or is_new:
+            merged[key] = record
+
+    for old in old_items if isinstance(old_items, list) else []:
+        add(old, is_new=False)
+    for item in new_items if isinstance(new_items, list) else []:
+        add(item, is_new=True)
+
+    return sorted(
+        merged.values(),
+        key=lambda item: parse_datetime(item.get("first_seen_at")) or datetime.min.replace(tzinfo=timezone.utc),
+        reverse=True,
+    )
 
 
 def request_forecast(location):
@@ -53,7 +125,7 @@ def request_forecast(location):
 
     for attempt in range(1, MAX_ATTEMPTS + 1):
         request = Request(url, headers={
-            "User-Agent": "thoitiet-vietnam-static-mvp/1.1",
+            "User-Agent": "thoitiet-vietnam-static-mvp/1.2",
             "Accept": "application/json",
             "Connection": "close",
         })
@@ -65,7 +137,6 @@ def request_forecast(location):
             return payload
         except HTTPError as exc:
             last_error = exc
-            # Do not retry permanent client errors; retry throttling and server errors.
             if exc.code != 429 and not 500 <= exc.code < 600:
                 raise
         except (URLError, TimeoutError, OSError, ssl.SSLError, json.JSONDecodeError, ValueError) as exc:
@@ -130,13 +201,14 @@ def main():
     DATA_PATH.parent.mkdir(parents=True, exist_ok=True)
     existing = read_existing()
     old_weather = existing.get("weather", [])
-    previous = {
+    previous_weather = {
         item.get("id"): item
         for item in old_weather
         if isinstance(item, dict) and isinstance(item.get("id"), str)
     } if isinstance(old_weather, list) else {}
 
     attempted_at = now_iso()
+    current_time = now_utc()
     errors = []
     records = []
     fresh_count = 0
@@ -147,11 +219,27 @@ def main():
             records.append(normalize(location, forecast, attempted_at))
             fresh_count += 1
         except (HTTPError, URLError, TimeoutError, RuntimeError, ValueError, OSError, ssl.SSLError) as exc:
-            old = previous.get(location["id"])
+            old = previous_weather.get(location["id"])
             if old:
                 old["stale"] = True
                 records.append(old)
             errors.append(f"Không lấy được dữ liệu cho {location['name']}: {exc}")
+
+    # Storm/advisory feed adapter is not connected yet. Keep previous reports
+    # visible for 24 hours, then remove them. New feed results can be passed as
+    # new_storms/new_warnings without changing the retention logic.
+    storms = retain_bulletins(
+        new_items=[],
+        old_items=existing.get("storms", []),
+        fallback_timestamp=existing.get("generated_at"),
+        now=current_time,
+    )
+    warnings = retain_bulletins(
+        new_items=[],
+        old_items=existing.get("warnings", []),
+        fallback_timestamp=existing.get("generated_at"),
+        now=current_time,
+    )
 
     successes = sum(not item.get("stale", False) for item in records)
     status = "ok" if successes == len(LOCATIONS) else "degraded" if successes else "unavailable"
@@ -169,20 +257,18 @@ def main():
         },
         "locations": LOCATIONS,
         "weather": records,
-        "storms": existing.get("storms", []),
-        "warnings": existing.get("warnings", []),
+        "storms": storms,
+        "warnings": warnings,
         "errors": errors,
     }
 
-    # Keep the last known JSON untouched if the provider is entirely unavailable.
-    # Exiting non-zero also makes the failed fetch visible in the Actions run.
-    if fresh_count == 0:
-        print("Không lấy được dữ liệu mới cho thành phố nào; giữ nguyên data/weather.json.", file=sys.stderr)
-        print("\n".join(errors), file=sys.stderr)
-        return 1
-
+    # Write even if the weather provider is temporarily unavailable so expired
+    # storm/advisory items are pruned and stale weather remains marked as stale.
     DATA_PATH.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(f"Đã ghi {successes}/{len(LOCATIONS)} điểm thời tiết mới; status={status}")
+    print(
+        f"Đã ghi {successes}/{len(LOCATIONS)} điểm thời tiết mới; "
+        f"giữ {len(storms)} tin bão và {len(warnings)} cảnh báo còn trong 24 giờ; status={status}"
+    )
     if errors:
         print("\n".join(errors), file=sys.stderr)
     return 0
