@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "generated_at": null,
-  "last_attempt_at": null,
+  "generated_at": "2026-11-10T13:09:46Z",
+  "last_attempt_at": "2026-11-10T13:09:46Z",
   "last_success_at": null,
   "status": "unavailable",
   "provider": {
@@ -10,9 +10,72 @@
     "official_vietnamese_source": false,
     "attribution": "Weather data by Open-Meteo.com"
   },
-  "locations": [],
+  "locations": [
+    {
+      "id": "ha-noi",
+      "name": "Hà Nội",
+      "latitude": 21.0285,
+      "longitude": 105.8542
+    },
+    {
+      "id": "tp-ho-chi-minh",
+      "name": "TP. Hồ Chí Minh",
+      "latitude": 10.8231,
+      "longitude": 106.6297
+    },
+    {
+      "id": "da-nang",
+      "name": "Đà Nẵng",
+      "latitude": 16.0544,
+      "longitude": 108.2022
+    },
+    {
+      "id": "hai-phong",
+      "name": "Hải Phòng",
+      "latitude": 20.8449,
+      "longitude": 106.6881
+    },
+    {
+      "id": "can-tho",
+      "name": "Cần Thơ",
+      "latitude": 10.0452,
+      "longitude": 105.7469
+    },
+    {
+      "id": "hue",
+      "name": "Huế",
+      "latitude": 16.4637,
+      "longitude": 107.5909
+    },
+    {
+      "id": "lao-cai",
+      "name": "Lào Cai",
+      "latitude": 22.4809,
+      "longitude": 103.9755
+    },
+    {
+      "id": "nghe-an",
+      "name": "Nghệ An",
+      "latitude": 18.6796,
+      "longitude": 105.6813
+    },
+    {
+      "id": "khanh-hoa",
+      "name": "Khánh Hòa",
+      "latitude": 12.2388,
+      "longitude": 109.1967
+    },
+    {
+      "id": "an-giang",
+      "name": "An Giang",
+      "latitude": 10.5216,
+      "longitude": 105.1259
+    }
+  ],
   "weather": [],
   "storms": [],
   "warnings": [],
-  "errors": ["Chưa có lần chạy workflow thành công."]
+  "errors": [
+    "Không lấy được dữ liệu thời tiết: <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1147)>"
+  ]
 }
