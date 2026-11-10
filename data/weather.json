@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-10T14:01:14Z",
-  "last_attempt_at": "2026-11-10T14:01:14Z",
-  "last_success_at": "2026-11-10T14:01:14Z",
+  "generated_at": "2026-11-10T14:01:28Z",
+  "last_attempt_at": "2026-11-10T14:01:28Z",
+  "last_success_at": "2026-11-10T14:01:28Z",
   "status": "ok",
   "provider": {
     "name": "Open-Meteo (tham khảo, không phải nguồn chính thức Việt Nam)",
@@ -38,7 +38,7 @@
       "longitude": 105.8542,
       "source_name": "Open-Meteo (tham khảo, không phải nguồn chính thức Việt Nam)",
       "source_url": "https://open-meteo.com/",
-      "fetched_at": "2026-11-10T14:01:14Z",
+      "fetched_at": "2026-11-10T14:01:28Z",
       "published_at": "2026-11-10T21:00",
       "stale": false,
       "current": {
@@ -63,20 +63,20 @@
       "longitude": 108.2022,
       "source_name": "Open-Meteo (tham khảo, không phải nguồn chính thức Việt Nam)",
       "source_url": "https://open-meteo.com/",
-      "fetched_at": "2026-11-10T14:01:14Z",
+      "fetched_at": "2026-11-10T14:01:28Z",
       "published_at": "2026-11-10T21:00",
       "stale": false,
       "current": {
-        "temperature_c": 24.7,
-        "relative_humidity_percent": 79,
-        "apparent_temperature_c": 24.9,
-        "precipitation_mm": 0.2,
-        "weather_code": 53,
-        "wind_speed_kph": 27.6,
-        "wind_direction_deg": 21
+        "temperature_c": 23.9,
+        "relative_humidity_percent": 87,
+        "apparent_temperature_c": 25.3,
+        "precipitation_mm": 0.5,
+        "weather_code": 80,
+        "wind_speed_kph": 22.6,
+        "wind_direction_deg": 6
       },
       "daily": {
-        "temperature_max_c": 25.2,
+        "temperature_max_c": 25.3,
         "temperature_min_c": 23.0,
         "precipitation_probability_max_percent": 100
       }
@@ -88,7 +88,7 @@
       "longitude": 106.6297,
       "source_name": "Open-Meteo (tham khảo, không phải nguồn chính thức Việt Nam)",
       "source_url": "https://open-meteo.com/",
-      "fetched_at": "2026-11-10T14:01:14Z",
+      "fetched_at": "2026-11-10T14:01:28Z",
       "published_at": "2026-11-10T21:00",
       "stale": false,
       "current": {
