@@ -6,34 +6,13 @@ const dataNotice = document.querySelector("#data-notice");
 const refreshButton = document.querySelector("#refresh-button");
 
 const descriptions = {
-  0: ["Trời quang", "☀"],
-  1: ["Trời gần quang", "🌤"],
-  2: ["Có mây", "⛅"],
-  3: ["Nhiều mây", "☁"],
-  45: ["Sương mù", "🌫"],
-  48: ["Sương mù đóng băng", "🌫"],
-  51: ["Mưa nhỏ", "🌦"],
-  53: ["Mưa nhỏ vừa", "🌦"],
-  55: ["Mưa vừa", "🌧"],
-  56: ["Mưa lạnh", "🌧"],
-  57: ["Mưa lạnh nặng", "🌧"],
-  61: ["Mưa nhẹ", "🌧"],
-  63: ["Mưa trung bình", "🌧"],
-  65: ["Mưa lớn", "🌧"],
-  66: ["Mưa lạnh", "🌧"],
-  67: ["Mưa đá", "🌧"],
-  71: ["Tuyết rơi nhẹ", "❄"],
-  73: ["Tuyết rơi vừa", "❄"],
-  75: ["Tuyết rơi nhiều", "❄"],
-  77: ["Mưa đá", "❄"],
-  80: ["Mưa rào", "🌦"],
-  81: ["Mưa rào mạnh", "🌧"],
-  82: ["Mưa rào rất mạnh", "⛈"],
-  85: ["Tuyết rơi", "❄"],
-  86: ["Tuyết rơi nặng", "❄"],
-  95: ["Dông", "⛈"],
-  96: ["Dông kèm mưa đá", "⛈"],
-  99: ["Dông kèm mưa đá", "⛈"]
+  0: ["Trời quang", "☀"], 1: ["Trời gần quang", "🌤"], 2: ["Có mây", "⛅"], 3: ["Nhiều mây", "☁"],
+  45: ["Sương mù", "🌫"], 48: ["Sương mù đóng băng", "🌫"], 51: ["Mưa nhỏ", "🌦"], 53: ["Mưa nhỏ vừa", "🌦"],
+  55: ["Mưa vừa", "🌧"], 56: ["Mưa lạnh", "🌧"], 57: ["Mưa lạnh nặng", "🌧"], 61: ["Mưa nhẹ", "🌧"],
+  63: ["Mưa trung bình", "🌧"], 65: ["Mưa lớn", "🌧"], 66: ["Mưa lạnh", "🌧"], 67: ["Mưa đá", "🌧"],
+  71: ["Tuyết rơi nhẹ", "❄"], 73: ["Tuyết rơi vừa", "❄"], 75: ["Tuyết rơi nhiều", "❄"], 77: ["Mưa đá", "❄"],
+  80: ["Mưa rào", "🌦"], 81: ["Mưa rào mạnh", "🌧"], 82: ["Mưa rào rất mạnh", "⛈"],
+  85: ["Tuyết rơi", "❄"], 86: ["Tuyết rơi nặng", "❄"], 95: ["Dông", "⛈"], 96: ["Dông kèm mưa đá", "⛈"], 99: ["Dông kèm mưa đá", "⛈"]
 };
 
 let data = null;
@@ -42,225 +21,162 @@ function dateText(value) {
   if (!value) return "Chưa có dữ liệu";
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return "Chưa có dữ liệu";
-  return new Intl.DateTimeFormat("vi-VN", {
-    dateStyle: "short",
-    timeStyle: "short"
-  }).format(date);
+  return new Intl.DateTimeFormat("vi-VN", { dateStyle: "short", timeStyle: "short" }).format(date);
 }
 
 function isNumber(value) {
   return typeof value === "number" && Number.isFinite(value);
 }
 
-function weatherSummary(code) {
-  const entry = descriptions[code] || ["Không xác định", "—"];
-  return `${entry[1]} ${entry[0]}`;
-}
-
-function emptyState(message) {
-  weatherCard.innerHTML = `<div class="empty-state">${message}</div>`;
+function formatNumber(value, suffix = "", digits = 0) {
+  return isNumber(value) ? `${value.toFixed(digits)}${suffix}` : "—";
 }
 
 function renderWeather() {
-  if (!data) {
-    emptyState("Đang tải dữ liệu...");
-    return;
-  }
-
-  const selectedId = locationSelect?.value || "";
-  const list = Array.isArray(data.weather) ? data.weather : [];
-  const record = list.find((item) => item.id === selectedId) || list[0] || null;
+  if (!weatherCard) return;
+  const records = Array.isArray(data?.weather) ? data.weather : [];
+  const record = records.find((item) => item.id === locationSelect?.value) || records[0];
 
   if (!record) {
-    emptyState("Chưa có dữ liệu cho điểm theo dõi.");
+    weatherCard.innerHTML = '<div class="empty-state">Chưa có dữ liệu thời tiết cho điểm theo dõi.</div>';
     return;
   }
 
   const current = record.current || {};
   const daily = record.daily || {};
-  const temp = isNumber(current.temperature_c) ? `${Math.round(current.temperature_c)}°C` : "—";
-  const feelsLike = isNumber(current.apparent_temperature_c) ? `${Math.round(current.apparent_temperature_c)}°C` : "—";
-  const humidity = isNumber(current.relative_humidity_percent) ? `${Math.round(current.relative_humidity_percent)}%` : "—";
-  const wind = isNumber(current.wind_speed_kph) ? `${Math.round(current.wind_speed_kph)} km/h` : "—";
-  const rain = isNumber(current.precipitation_mm) ? `${current.precipitation_mm.toFixed(1)} mm` : "—";
-  const maxTemp = isNumber(daily.temperature_max_c) ? `${Math.round(daily.temperature_max_c)}°C` : "—";
-  const minTemp = isNumber(daily.temperature_min_c) ? `${Math.round(daily.temperature_min_c)}°C` : "—";
-  const precipProb = isNumber(daily.precipitation_probability_max_percent) ? `${Math.round(daily.precipitation_probability_max_percent)}%` : "—";
-
-  const code = Number(current.weather_code ?? 0);
-  const summary = weatherSummary(code);
-
+  const [summary, icon] = descriptions[current.weather_code] || ["Không xác định", "—"];
   weatherCard.innerHTML = `
     <div class="weather-main">
       <div>
-        <div class="weather-place">${record.name || "Điểm theo dõi"}</div>
-        <div class="weather-summary">${summary}</div>
+        <div class="weather-place"></div>
+        <p class="weather-summary"><span class="weather-icon" aria-hidden="true"></span><span class="weather-description"></span></p>
       </div>
-      <div class="temperature">${temp}</div>
+      <div class="temperature">${formatNumber(current.temperature_c, "°C")}</div>
     </div>
     <div class="weather-details">
-      <div>
-        <span class="detail-label">Cảm giác như</span>
-        <span class="detail-value">${feelsLike}</span>
-      </div>
-      <div>
-        <span class="detail-label">Độ ẩm</span>
-        <span class="detail-value">${humidity}</span>
-      </div>
-      <div>
-        <span class="detail-label">Gió</span>
-        <span class="detail-value">${wind}</span>
-      </div>
-      <div>
-        <span class="detail-label">Mưa</span>
-        <span class="detail-value">${rain}</span>
-      </div>
-      <div>
-        <span class="detail-label">Cao nhất</span>
-        <span class="detail-value">${maxTemp}</span>
-      </div>
-      <div>
-        <span class="detail-label">Thấp nhất</span>
-        <span class="detail-value">${minTemp}</span>
-      </div>
-      <div>
-        <span class="detail-label">Xác suất mưa</span>
-        <span class="detail-value">${precipProb}</span>
-      </div>
-      <div>
-        <span class="detail-label">Cập nhật</span>
-        <span class="detail-value">${dateText(record.fetched_at)}</span>
-      </div>
-    </div>
-  `;
+      <div><span class="detail-label">Cảm giác như</span><span class="detail-value">${formatNumber(current.apparent_temperature_c, "°C")}</span></div>
+      <div><span class="detail-label">Độ ẩm</span><span class="detail-value">${formatNumber(current.relative_humidity_percent, "%")}</span></div>
+      <div><span class="detail-label">Gió</span><span class="detail-value">${formatNumber(current.wind_speed_kph, " km/h")}</span></div>
+      <div><span class="detail-label">Mưa</span><span class="detail-value">${formatNumber(current.precipitation_mm, " mm", 1)}</span></div>
+      <div><span class="detail-label">Cao nhất</span><span class="detail-value">${formatNumber(daily.temperature_max_c, "°C")}</span></div>
+      <div><span class="detail-label">Thấp nhất</span><span class="detail-value">${formatNumber(daily.temperature_min_c, "°C")}</span></div>
+      <div><span class="detail-label">Xác suất mưa</span><span class="detail-value">${formatNumber(daily.precipitation_probability_max_percent, "%")}</span></div>
+      <div><span class="detail-label">Cập nhật</span><span class="detail-value">${dateText(record.fetched_at)}</span></div>
+    </div>`;
+  weatherCard.querySelector(".weather-place").textContent = record.name || "Điểm theo dõi";
+  weatherCard.querySelector(".weather-icon").textContent = icon;
+  weatherCard.querySelector(".weather-description").textContent = summary;
 }
 
-function renderBulletins(id, records, type) {
-  const container = document.getElementById(id);
+function renderBulletins(containerId, records, type) {
+  const container = document.getElementById(containerId);
   if (!container) return;
-
   container.replaceChildren();
   const items = Array.isArray(records) ? records : [];
 
   if (items.length === 0) {
     const empty = document.createElement("p");
     empty.className = "muted";
-    empty.textContent = type === "storm" ? "Chưa có thông tin bão hoặc áp thấp." : "Chưa có cảnh báo thiên tai.";
+    // Empty data does not mean there are no storms: this repository has not yet
+    // connected an authorized, reliable storm/advisory feed.
+    empty.textContent = type === "storm"
+      ? "Chưa tích hợp nguồn dữ liệu bão; vui lòng theo dõi bản tin từ cơ quan khí tượng."
+      : "Chưa tích hợp nguồn cảnh báo; vui lòng theo dõi thông báo từ cơ quan chức năng.";
     container.appendChild(empty);
     return;
   }
 
-  items.forEach((item) => {
+  for (const item of items) {
     const wrapper = document.createElement("div");
     wrapper.className = "bulletin-item";
-
     const title = document.createElement("strong");
     title.textContent = item.title || item.name || "Thông tin";
+    wrapper.appendChild(title);
 
-    const detail = document.createElement("div");
-    detail.className = "bulletin-content";
-
-    if (item.summary) {
-      detail.innerHTML = `<p>${item.summary}</p>`;
-    } else if (item.message) {
-      detail.innerHTML = `<p>${item.message}</p>`;
-    } else if (item.description) {
-      detail.innerHTML = `<p>${item.description}</p>`;
-    } else {
-      detail.innerHTML = "<p>Không có mô tả.</p>";
+    const message = item.summary || item.message || item.description;
+    if (message) {
+      const paragraph = document.createElement("p");
+      paragraph.textContent = message;
+      wrapper.appendChild(paragraph);
     }
 
-    wrapper.appendChild(title);
-    wrapper.appendChild(detail);
+    if (item.url) {
+      const link = document.createElement("a");
+      link.href = item.url;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.textContent = "Xem nguồn tin";
+      wrapper.appendChild(link);
+    }
     container.appendChild(wrapper);
-  });
+  }
 }
 
 function populateLocationSelect() {
-  const locations = Array.isArray(data?.locations) && data.locations.length > 0
+  if (!locationSelect) return;
+  const locations = Array.isArray(data?.locations) && data.locations.length
     ? data.locations
     : (Array.isArray(data?.weather) ? data.weather : []);
+  const previousValue = locationSelect.value;
+  locationSelect.replaceChildren();
 
-  if (!locationSelect) return;
-
-  if (!locations.length) {
-    locationSelect.innerHTML = '<option value="">Không có dữ liệu</option>';
-    return;
+  for (const location of locations) {
+    const option = document.createElement("option");
+    option.value = location.id;
+    option.textContent = location.name || location.id;
+    locationSelect.appendChild(option);
   }
 
-  locationSelect.innerHTML = locations
-    .map((item) => `<option value="${item.id}">${item.name}</option>`)
-    .join("");
-
-  if (locations[0]?.id) {
-    locationSelect.value = locations[0].id;
+  if (locations.some((location) => location.id === previousValue)) {
+    locationSelect.value = previousValue;
   }
 }
 
 function updateDataNotice() {
   if (!dataNotice) return;
-
   const errors = Array.isArray(data?.errors) ? data.errors : [];
-  const status = data?.status || "unavailable";
-
   if (errors.length) {
     dataNotice.textContent = errors[0];
-    return;
+  } else if (data?.status === "ok") {
+    dataNotice.textContent = "Dữ liệu thời tiết tham khảo đã được cập nhật.";
+  } else if (data?.status === "degraded") {
+    dataNotice.textContent = "Một số điểm đang hiển thị dữ liệu cũ do chưa cập nhật được.";
+  } else {
+    dataNotice.textContent = "Hiện chưa có dữ liệu thời tiết khả dụng.";
   }
-
-  if (status === "ok") {
-    dataNotice.textContent = "Dữ liệu đang được cập nhật theo thời gian thực từ nguồn tham khảo.";
-    return;
-  }
-
-  if (status === "degraded") {
-    dataNotice.textContent = "Dữ liệu đã có, nhưng có một số điểm đang bị cập nhật lại.";
-    return;
-  }
-
-  dataNotice.textContent = "Hiện chưa có dữ liệu thời tiết khả dụng.";
 }
 
 async function loadData() {
-  if (!refreshButton) return;
-
-  refreshButton.disabled = true;
-  emptyState("Đang đọc dữ liệu thời tiết…");
+  if (refreshButton) refreshButton.disabled = true;
+  if (weatherCard) weatherCard.innerHTML = '<div class="loading-state">Đang đọc dữ liệu thời tiết…</div>';
 
   try {
     const response = await fetch(`${DATA_URL.href}?t=${Date.now()}`, { cache: "no-store" });
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
-
-    data = await response.json();
+    if (!response.ok) throw new Error(`Tải weather.json thất bại: HTTP ${response.status}`);
+    const payload = await response.json();
+    if (!payload || typeof payload !== "object") throw new Error("weather.json không đúng định dạng");
+    data = payload;
     populateLocationSelect();
     renderWeather();
     updateDataNotice();
-
     if (updatedAt) {
-      updatedAt.textContent = data?.generated_at ? `Cập nhật: ${dateText(data.generated_at)}` : "Cập nhật: Chưa có dữ liệu";
+      updatedAt.textContent = data.generated_at ? `Cập nhật: ${dateText(data.generated_at)}` : "Cập nhật: Chưa có dữ liệu";
     }
-
-    renderBulletins("storm-list", data?.storms, "storm");
-    renderBulletins("warning-list", data?.warnings, "warning");
+    // IDs must match index.html: storms-list and warnings-list (plural).
+    renderBulletins("storms-list", data.storms, "storm");
+    renderBulletins("warnings-list", data.warnings, "warning");
   } catch (error) {
-    console.error(error);
-    data = null;
-    emptyState("Không thể tải dữ liệu thời tiết. Vui lòng thử lại sau.");
+    console.error("Không tải được dữ liệu thời tiết:", error);
+    if (weatherCard) weatherCard.innerHTML = '<div class="error-state">Không thể tải dữ liệu thời tiết. Vui lòng thử lại sau.</div>';
     if (updatedAt) updatedAt.textContent = "Cập nhật: Chưa có dữ liệu";
-    if (dataNotice) dataNotice.textContent = "Lỗi kết nối hoặc dữ liệu không có sẵn.";
+    if (dataNotice) dataNotice.textContent = "Lỗi tải dữ liệu. Kiểm tra kết nối hoặc thử tải lại.";
+    renderBulletins("storms-list", [], "storm");
+    renderBulletins("warnings-list", [], "warning");
   } finally {
-    refreshButton.disabled = false;
+    if (refreshButton) refreshButton.disabled = false;
   }
 }
 
-if (locationSelect) {
-  locationSelect.addEventListener("change", renderWeather);
-}
-
-if (refreshButton) {
-  refreshButton.addEventListener("click", loadData);
-}
-
+locationSelect?.addEventListener("change", renderWeather);
+refreshButton?.addEventListener("click", loadData);
 loadData();
