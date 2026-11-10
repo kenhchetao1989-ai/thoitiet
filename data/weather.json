@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "generated_at": null,
+  "last_attempt_at": null,
+  "last_success_at": null,
+  "status": "unavailable",
+  "provider": {
+    "name": "Open-Meteo (tham khảo, không phải nguồn chính thức Việt Nam)",
+    "url": "https://open-meteo.com/",
+    "official_vietnamese_source": false,
+    "attribution": "Weather data by Open-Meteo.com"
+  },
+  "locations": [],
+  "weather": [],
+  "storms": [],
+  "warnings": [],
+  "errors": ["Chưa có lần chạy workflow thành công."]
+}
