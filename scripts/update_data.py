@@ -15,15 +15,8 @@ API_URL = "https://api.open-meteo.com/v1/forecast"
 SOURCE_NAME = "Open-Meteo (tham khảo, không phải nguồn chính thức Việt Nam)"
 LOCATIONS = [
     {"id":"ha-noi","name":"Hà Nội","latitude":21.0285,"longitude":105.8542},
-    {"id":"tp-ho-chi-minh","name":"TP. Hồ Chí Minh","latitude":10.8231,"longitude":106.6297},
     {"id":"da-nang","name":"Đà Nẵng","latitude":16.0544,"longitude":108.2022},
-    {"id":"hai-phong","name":"Hải Phòng","latitude":20.8449,"longitude":106.6881},
-    {"id":"can-tho","name":"Cần Thơ","latitude":10.0452,"longitude":105.7469},
-    {"id":"hue","name":"Huế","latitude":16.4637,"longitude":107.5909},
-    {"id":"lao-cai","name":"Lào Cai","latitude":22.4809,"longitude":103.9755},
-    {"id":"nghe-an","name":"Nghệ An","latitude":18.6796,"longitude":105.6813},
-    {"id":"khanh-hoa","name":"Khánh Hòa","latitude":12.2388,"longitude":109.1967},
-    {"id":"an-giang","name":"An Giang","latitude":10.5216,"longitude":105.1259},
+    {"id":"tp-ho-chi-minh","name":"TP. Hồ Chí Minh","latitude":10.8231,"longitude":106.6297},
 ]
 
 def now_iso():
