@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 """Fetch, validate and normalize public forecast data into static JSON."""
 from __future__ import annotations
+
 import json
+import random
+import ssl
 import sys
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.error import HTTPError, URLError
@@ -14,13 +18,17 @@ DATA_PATH = ROOT / "data" / "weather.json"
 API_URL = "https://api.open-meteo.com/v1/forecast"
 SOURCE_NAME = "Open-Meteo (tham khảo, không phải nguồn chính thức Việt Nam)"
 LOCATIONS = [
-    {"id":"ha-noi","name":"Hà Nội","latitude":21.0285,"longitude":105.8542},
-    {"id":"da-nang","name":"Đà Nẵng","latitude":16.0544,"longitude":108.2022},
-    {"id":"tp-ho-chi-minh","name":"TP. Hồ Chí Minh","latitude":10.8231,"longitude":106.6297},
+    {"id": "ha-noi", "name": "Hà Nội", "latitude": 21.0285, "longitude": 105.8542},
+    {"id": "da-nang", "name": "Đà Nẵng", "latitude": 16.0544, "longitude": 108.2022},
+    {"id": "tp-ho-chi-minh", "name": "TP. Hồ Chí Minh", "latitude": 10.8231, "longitude": 106.6297},
 ]
+MAX_ATTEMPTS = 4
+TIMEOUT_SECONDS = 20
+
 
 def now_iso():
     return datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
+
 
 def read_existing():
     try:
@@ -29,73 +37,156 @@ def read_existing():
     except (OSError, json.JSONDecodeError):
         return {}
 
-def request_forecasts():
+
+def request_forecast(location):
+    """Fetch one city at a time; retry transient TLS/network/API failures."""
     query = urlencode({
-        "latitude": ",".join(str(item["latitude"]) for item in LOCATIONS),
-        "longitude": ",".join(str(item["longitude"]) for item in LOCATIONS),
+        "latitude": location["latitude"],
+        "longitude": location["longitude"],
         "current": "temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m",
         "daily": "temperature_2m_max,temperature_2m_min,precipitation_probability_max",
-        "forecast_days": "1", "timezone": "Asia/Ho_Chi_Minh",
+        "forecast_days": "1",
+        "timezone": "Asia/Ho_Chi_Minh",
     })
-    request = Request(f"{API_URL}?{query}", headers={"User-Agent":"thoitiet-vietnam-static-mvp/1.0","Accept":"application/json"})
-    with urlopen(request, timeout=25) as response:
-        payload = json.loads(response.read().decode("utf-8"))
-    if isinstance(payload, dict): payload = [payload]
-    if not isinstance(payload, list) or len(payload) != len(LOCATIONS):
-        raise ValueError("Phản hồi API không có đủ các điểm theo dõi")
-    return payload
+    url = f"{API_URL}?{query}"
+    last_error = None
+
+    for attempt in range(1, MAX_ATTEMPTS + 1):
+        request = Request(url, headers={
+            "User-Agent": "thoitiet-vietnam-static-mvp/1.1",
+            "Accept": "application/json",
+            "Connection": "close",
+        })
+        try:
+            with urlopen(request, timeout=TIMEOUT_SECONDS, context=ssl.create_default_context()) as response:
+                payload = json.loads(response.read().decode("utf-8"))
+            if not isinstance(payload, dict):
+                raise ValueError("Phản hồi API không phải JSON object")
+            return payload
+        except HTTPError as exc:
+            last_error = exc
+            # Do not retry permanent client errors; retry throttling and server errors.
+            if exc.code != 429 and not 500 <= exc.code < 600:
+                raise
+        except (URLError, TimeoutError, OSError, ssl.SSLError, json.JSONDecodeError, ValueError) as exc:
+            last_error = exc
+
+        if attempt < MAX_ATTEMPTS:
+            delay = min(2 ** attempt, 12) + random.uniform(0, 0.5)
+            print(
+                f"{location['name']}: lần thử {attempt}/{MAX_ATTEMPTS} thất bại ({last_error}); "
+                f"thử lại sau {delay:.1f}s",
+                file=sys.stderr,
+                flush=True,
+            )
+            time.sleep(delay)
+
+    raise RuntimeError(f"sau {MAX_ATTEMPTS} lần thử vẫn thất bại: {last_error}") from last_error
+
 
 def number(value):
     return value if isinstance(value, (int, float)) and not isinstance(value, bool) else None
+
 
 def first_number(daily, field):
     values = daily.get(field)
     return number(values[0]) if isinstance(values, list) and values else None
 
+
 def normalize(location, forecast, fetched_at):
-    if not isinstance(forecast, dict): raise ValueError("phản hồi điểm không hợp lệ")
+    if not isinstance(forecast, dict):
+        raise ValueError("phản hồi điểm không hợp lệ")
     current, daily = forecast.get("current") or {}, forecast.get("daily") or {}
-    if not isinstance(current, dict) or not isinstance(daily, dict): raise ValueError("thiếu current hoặc daily")
+    if not isinstance(current, dict) or not isinstance(daily, dict):
+        raise ValueError("thiếu current hoặc daily")
     temperature = number(current.get("temperature_2m"))
-    if temperature is None: raise ValueError("thiếu nhiệt độ hợp lệ")
-    return {**location,"source_name":SOURCE_NAME,"source_url":"https://open-meteo.com/","fetched_at":fetched_at,"published_at":current.get("time"),"stale":False,
-        "current":{"temperature_c":temperature,"relative_humidity_percent":number(current.get("relative_humidity_2m")),"apparent_temperature_c":number(current.get("apparent_temperature")),"precipitation_mm":number(current.get("precipitation")),"weather_code":number(current.get("weather_code")),"wind_speed_kmh":number(current.get("wind_speed_10m")),"wind_direction_degrees":number(current.get("wind_direction_10m"))},
-        "daily":{"temperature_max_c":first_number(daily,"temperature_2m_max"),"temperature_min_c":first_number(daily,"temperature_2m_min"),"precipitation_probability_max_percent":first_number(daily,"precipitation_probability_max")}}
+    if temperature is None:
+        raise ValueError("thiếu nhiệt độ hợp lệ")
+    return {
+        **location,
+        "source_name": SOURCE_NAME,
+        "source_url": "https://open-meteo.com/",
+        "fetched_at": fetched_at,
+        "published_at": current.get("time"),
+        "stale": False,
+        "current": {
+            "temperature_c": temperature,
+            "relative_humidity_percent": number(current.get("relative_humidity_2m")),
+            "apparent_temperature_c": number(current.get("apparent_temperature")),
+            "precipitation_mm": number(current.get("precipitation")),
+            "weather_code": number(current.get("weather_code")),
+            "wind_speed_kph": number(current.get("wind_speed_10m")),
+            "wind_direction_deg": number(current.get("wind_direction_10m")),
+        },
+        "daily": {
+            "temperature_max_c": first_number(daily, "temperature_2m_max"),
+            "temperature_min_c": first_number(daily, "temperature_2m_min"),
+            "precipitation_probability_max_percent": first_number(daily, "precipitation_probability_max"),
+        },
+    }
+
 
 def main():
     DATA_PATH.parent.mkdir(parents=True, exist_ok=True)
     existing = read_existing()
     old_weather = existing.get("weather", [])
-    previous = {item.get("id"):item for item in old_weather if isinstance(item,dict) and isinstance(item.get("id"),str)} if isinstance(old_weather,list) else {}
-    attempted_at, errors = now_iso(), []
-    try: forecasts = request_forecasts()
-    except (HTTPError, URLError, TimeoutError, ValueError, json.JSONDecodeError, OSError) as exc:
-        forecasts = []
-        errors.append(f"Không lấy được dữ liệu thời tiết: {exc}")
+    previous = {
+        item.get("id"): item
+        for item in old_weather
+        if isinstance(item, dict) and isinstance(item.get("id"), str)
+    } if isinstance(old_weather, list) else {}
+
+    attempted_at = now_iso()
+    errors = []
     records = []
-    if forecasts:
-        for location, forecast in zip(LOCATIONS, forecasts):
-            try: records.append(normalize(location, forecast, attempted_at))
-            except (AttributeError, TypeError, ValueError) as exc:
-                old = previous.get(location["id"])
-                if old:
-                    old["stale"] = True
-                    records.append(old)
-                errors.append(f"Dữ liệu của {location['name']} không hợp lệ: {exc}")
-    else:
-        for location in LOCATIONS:
+    fresh_count = 0
+
+    for location in LOCATIONS:
+        try:
+            forecast = request_forecast(location)
+            records.append(normalize(location, forecast, attempted_at))
+            fresh_count += 1
+        except (HTTPError, URLError, TimeoutError, RuntimeError, ValueError, OSError, ssl.SSLError) as exc:
             old = previous.get(location["id"])
             if old:
                 old["stale"] = True
                 records.append(old)
+            errors.append(f"Không lấy được dữ liệu cho {location['name']}: {exc}")
+
     successes = sum(not item.get("stale", False) for item in records)
     status = "ok" if successes == len(LOCATIONS) else "degraded" if successes else "unavailable"
-    payload = {"schema_version":1,"generated_at":attempted_at,"last_attempt_at":attempted_at,"last_success_at":attempted_at if successes else existing.get("last_success_at"),"status":status,
-        "provider":{"name":SOURCE_NAME,"url":"https://open-meteo.com/","official_vietnamese_source":False,"attribution":"Weather data by Open-Meteo.com"},
-        "locations":LOCATIONS,"weather":records,"storms":existing.get("storms",[]),"warnings":existing.get("warnings",[]),"errors":errors}
-    DATA_PATH.write_text(json.dumps(payload,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
-    print(f"Đã ghi {len(records)} điểm thời tiết; status={status}")
-    if errors: print("\n".join(errors),file=sys.stderr)
+    payload = {
+        "schema_version": 1,
+        "generated_at": attempted_at,
+        "last_attempt_at": attempted_at,
+        "last_success_at": attempted_at if fresh_count else existing.get("last_success_at"),
+        "status": status,
+        "provider": {
+            "name": SOURCE_NAME,
+            "url": "https://open-meteo.com/",
+            "official_vietnamese_source": False,
+            "attribution": "Weather data by Open-Meteo.com",
+        },
+        "locations": LOCATIONS,
+        "weather": records,
+        "storms": existing.get("storms", []),
+        "warnings": existing.get("warnings", []),
+        "errors": errors,
+    }
+
+    # Keep the last known JSON untouched if the provider is entirely unavailable.
+    # Exiting non-zero also makes the failed fetch visible in the Actions run.
+    if fresh_count == 0:
+        print("Không lấy được dữ liệu mới cho thành phố nào; giữ nguyên data/weather.json.", file=sys.stderr)
+        print("\n".join(errors), file=sys.stderr)
+        return 1
+
+    DATA_PATH.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print(f"Đã ghi {successes}/{len(LOCATIONS)} điểm thời tiết mới; status={status}")
+    if errors:
+        print("\n".join(errors), file=sys.stderr)
     return 0
 
-if __name__ == "__main__": raise SystemExit(main())
+
+if __name__ == "__main__":
+    raise SystemExit(main())
