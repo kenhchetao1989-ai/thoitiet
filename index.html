@@ -15,70 +15,23 @@
 <body>
   <div class="page-shell">
     <header class="topbar">
-      <a class="brand" href="./" aria-label="Thời tiết Việt Nam - trang chủ">
-        <span class="brand-mark" aria-hidden="true">☀</span>
-        <span>thời tiết<span class="brand-accent">.vn</span></span>
-      </a>
+      <a class="brand" href="./" aria-label="Thời tiết Việt Nam - trang chủ"><span class="brand-mark" aria-hidden="true">☀</span><span>thời tiết<span class="brand-accent">.vn</span></span></a>
       <span class="topbar-note"><span class="live-dot" aria-hidden="true"></span> Thông tin có nguồn và thời điểm cập nhật</span>
     </header>
-
     <main>
-      <section class="intro" aria-labelledby="page-title">
-        <p class="eyebrow">THỜI TIẾT &amp; THIÊN TAI</p>
-        <h1 id="page-title">Thời tiết Việt Nam</h1>
-        <p class="intro-copy">Theo dõi thời tiết tại các điểm lớn. Bản tin bão và cảnh báo chỉ hiển thị khi có nguồn dữ liệu được xác minh.</p>
-      </section>
-
+      <section class="intro" aria-labelledby="page-title"><p class="eyebrow">THỜI TIẾT &amp; THIÊN TAI</p><h1 id="page-title">Thời tiết Việt Nam</h1><p class="intro-copy">Theo dõi thời tiết tại các điểm lớn. Bản tin bão và cảnh báo chỉ hiển thị khi có nguồn dữ liệu được xác minh.</p></section>
       <section class="weather-section" aria-labelledby="weather-heading">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">DỰ BÁO THAM KHẢO</p>
-            <h2 id="weather-heading">Thời tiết hiện tại</h2>
-          </div>
-          <button id="refresh-button" class="refresh-button" type="button" title="Tải lại dữ liệu đã được cập nhật" aria-label="Tải lại dữ liệu">
-            <span aria-hidden="true">↻</span> Tải lại
-          </button>
-        </div>
-
-        <div class="location-controls">
-          <label for="location-select">Điểm theo dõi</label>
-          <select id="location-select" aria-label="Chọn điểm theo dõi"></select>
-          <span id="updated-at" class="updated-at">Đang tải dữ liệu…</span>
-        </div>
-
-        <div id="weather-card" class="weather-card" aria-live="polite">
-          <div class="loading-state">Đang đọc dữ liệu thời tiết…</div>
-        </div>
-        <p id="data-notice" class="data-notice"></p>
+        <div class="section-heading"><div><p class="eyebrow">DỰ BÁO THAM KHẢO</p><h2 id="weather-heading">Thời tiết hiện tại</h2></div><button id="refresh-button" class="refresh-button" type="button" aria-label="Tải lại dữ liệu"><span aria-hidden="true">↻</span> Tải lại</button></div>
+        <div class="location-controls"><label for="location-select">Điểm theo dõi</label><select id="location-select" aria-label="Chọn điểm theo dõi"></select><span id="updated-at" class="updated-at">Đang tải dữ liệu…</span></div>
+        <div id="weather-card" class="weather-card" aria-live="polite"><div class="loading-state">Đang đọc dữ liệu thời tiết…</div></div><p id="data-notice" class="data-notice"></p>
       </section>
-
       <section class="bulletins-grid" aria-label="Bản tin thiên tai">
-        <article class="bulletin-panel">
-          <div class="panel-title-row">
-            <span class="panel-icon storm-icon" aria-hidden="true">↗</span>
-            <div><p class="eyebrow">THEO DÕI</p><h2>Bão &amp; áp thấp</h2></div>
-          </div>
-          <div id="storms-list" class="bulletin-content"><p class="muted">Đang tải bản tin…</p></div>
-        </article>
-        <article class="bulletin-panel">
-          <div class="panel-title-row">
-            <span class="panel-icon warning-icon" aria-hidden="true">!</span>
-            <div><p class="eyebrow">THÔNG TIN AN TOÀN</p><h2>Cảnh báo thiên tai</h2></div>
-          </div>
-          <div id="warnings-list" class="bulletin-content"><p class="muted">Đang tải bản tin…</p></div>
-        </article>
+        <article class="bulletin-panel"><div class="panel-title-row"><span class="panel-icon storm-icon" aria-hidden="true">↗</span><div><p class="eyebrow">THEO DÕI</p><h2>Bão &amp; áp thấp</h2></div></div><div id="storms-list" class="bulletin-content"><p class="muted">Đang tải bản tin…</p></div></article>
+        <article class="bulletin-panel"><div class="panel-title-row"><span class="panel-icon warning-icon" aria-hidden="true">!</span><div><p class="eyebrow">THÔNG TIN AN TOÀN</p><h2>Cảnh báo thiên tai</h2></div></div><div id="warnings-list" class="bulletin-content"><p class="muted">Đang tải bản tin…</p></div></article>
       </section>
-
-      <aside class="trust-note">
-        <span class="trust-icon" aria-hidden="true">i</span>
-        <p>Thông tin thời tiết hiện tại là dữ liệu tham khảo từ Open-Meteo, không phải bản tin chính thức của cơ quan khí tượng Việt Nam. Luôn theo dõi hướng dẫn của cơ quan chức năng khi có thiên tai.</p>
-      </aside>
+      <aside class="trust-note"><span class="trust-icon" aria-hidden="true">i</span><p>Thời tiết hiện tại là dữ liệu tham khảo từ Open-Meteo, không phải bản tin chính thức của cơ quan khí tượng Việt Nam. Luôn theo dõi hướng dẫn của cơ quan chức năng khi có thiên tai.</p></aside>
     </main>
-
-    <footer class="footer">
-      <span>Thời tiết Việt Nam</span>
-      <span>Dữ liệu thời tiết: <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a></span>
-    </footer>
+    <footer class="footer"><span>Thời tiết Việt Nam</span><span>Dữ liệu thời tiết: <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a></span></footer>
   </div>
 </body>
 </html>
