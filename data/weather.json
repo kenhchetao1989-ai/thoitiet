@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-13T05:02:29Z",
-  "last_attempt_at": "2026-11-13T05:02:29Z",
-  "last_success_at": "2026-11-12T23:54:19Z",
-  "status": "unavailable",
+  "generated_at": "2026-11-13T13:02:00Z",
+  "last_attempt_at": "2026-11-13T13:02:00Z",
+  "last_success_at": "2026-11-13T13:02:00Z",
+  "status": "ok",
   "provider": {
     "name": "Open-Meteo (tham khảo, không phải nguồn chính thức Việt Nam)",
     "url": "https://open-meteo.com/",
@@ -38,22 +38,22 @@
       "longitude": 105.8542,
       "source_name": "Open-Meteo (tham khảo, không phải nguồn chính thức Việt Nam)",
       "source_url": "https://open-meteo.com/",
-      "fetched_at": "2026-11-12T23:54:19Z",
-      "published_at": "2026-11-13T06:45",
-      "stale": true,
+      "fetched_at": "2026-11-13T13:02:00Z",
+      "published_at": "2026-11-13T20:00",
+      "stale": false,
       "current": {
-        "temperature_c": 17.6,
-        "relative_humidity_percent": 95,
-        "apparent_temperature_c": 19.1,
+        "temperature_c": 19.6,
+        "relative_humidity_percent": 88,
+        "apparent_temperature_c": 21.9,
         "precipitation_mm": 0.0,
-        "weather_code": 3,
-        "wind_speed_kph": 5.8,
-        "wind_direction_deg": 309
+        "weather_code": 0,
+        "wind_speed_kph": 2.5,
+        "wind_direction_deg": 150
       },
       "daily": {
-        "temperature_max_c": 24.6,
-        "temperature_min_c": 17.4,
-        "precipitation_probability_max_percent": 84
+        "temperature_max_c": 23.1,
+        "temperature_min_c": 16.9,
+        "precipitation_probability_max_percent": 100
       }
     },
     {
@@ -63,21 +63,21 @@
       "longitude": 108.2022,
       "source_name": "Open-Meteo (tham khảo, không phải nguồn chính thức Việt Nam)",
       "source_url": "https://open-meteo.com/",
-      "fetched_at": "2026-11-12T23:54:19Z",
-      "published_at": "2026-11-13T06:45",
-      "stale": true,
+      "fetched_at": "2026-11-13T13:02:00Z",
+      "published_at": "2026-11-13T20:00",
+      "stale": false,
       "current": {
-        "temperature_c": 23.4,
-        "relative_humidity_percent": 97,
-        "apparent_temperature_c": 28.2,
-        "precipitation_mm": 0.4,
-        "weather_code": 80,
-        "wind_speed_kph": 4.0,
-        "wind_direction_deg": 309
+        "temperature_c": 25.2,
+        "relative_humidity_percent": 86,
+        "apparent_temperature_c": 29.3,
+        "precipitation_mm": 0.0,
+        "weather_code": 3,
+        "wind_speed_kph": 7.8,
+        "wind_direction_deg": 314
       },
       "daily": {
-        "temperature_max_c": 27.8,
-        "temperature_min_c": 22.9,
+        "temperature_max_c": 28.4,
+        "temperature_min_c": 23.3,
         "precipitation_probability_max_percent": 94
       }
     },
@@ -88,20 +88,20 @@
       "longitude": 106.6297,
       "source_name": "Open-Meteo (tham khảo, không phải nguồn chính thức Việt Nam)",
       "source_url": "https://open-meteo.com/",
-      "fetched_at": "2026-11-12T23:54:19Z",
-      "published_at": "2026-11-13T06:45",
-      "stale": true,
+      "fetched_at": "2026-11-13T13:02:00Z",
+      "published_at": "2026-11-13T20:00",
+      "stale": false,
       "current": {
-        "temperature_c": 25.5,
-        "relative_humidity_percent": 91,
-        "apparent_temperature_c": 30.7,
+        "temperature_c": 25.8,
+        "relative_humidity_percent": 96,
+        "apparent_temperature_c": 31.8,
         "precipitation_mm": 0.0,
-        "weather_code": 1,
-        "wind_speed_kph": 4.9,
-        "wind_direction_deg": 4
+        "weather_code": 3,
+        "wind_speed_kph": 5.1,
+        "wind_direction_deg": 328
       },
       "daily": {
-        "temperature_max_c": 33.3,
+        "temperature_max_c": 34.0,
         "temperature_min_c": 24.7,
         "precipitation_probability_max_percent": 98
       }
@@ -109,9 +109,5 @@
   ],
   "storms": [],
   "warnings": [],
-  "errors": [
-    "Không lấy được dữ liệu cho Hà Nội: sau 4 lần thử vẫn thất bại: <urlopen error _ssl.c:1129: The handshake operation timed out>",
-    "Không lấy được dữ liệu cho Đà Nẵng: sau 4 lần thử vẫn thất bại: <urlopen error _ssl.c:1129: The handshake operation timed out>",
-    "Không lấy được dữ liệu cho TP. Hồ Chí Minh: sau 4 lần thử vẫn thất bại: <urlopen error _ssl.c:1129: The handshake operation timed out>"
-  ]
+  "errors": []
 }
