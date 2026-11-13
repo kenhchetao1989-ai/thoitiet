@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-12T23:54:19Z",
-  "last_attempt_at": "2026-11-12T23:54:19Z",
+  "generated_at": "2026-11-13T05:02:29Z",
+  "last_attempt_at": "2026-11-13T05:02:29Z",
   "last_success_at": "2026-11-12T23:54:19Z",
-  "status": "ok",
+  "status": "unavailable",
   "provider": {
     "name": "Open-Meteo (tham khảo, không phải nguồn chính thức Việt Nam)",
     "url": "https://open-meteo.com/",
@@ -40,7 +40,7 @@
       "source_url": "https://open-meteo.com/",
       "fetched_at": "2026-11-12T23:54:19Z",
       "published_at": "2026-11-13T06:45",
-      "stale": false,
+      "stale": true,
       "current": {
         "temperature_c": 17.6,
         "relative_humidity_percent": 95,
@@ -65,7 +65,7 @@
       "source_url": "https://open-meteo.com/",
       "fetched_at": "2026-11-12T23:54:19Z",
       "published_at": "2026-11-13T06:45",
-      "stale": false,
+      "stale": true,
       "current": {
         "temperature_c": 23.4,
         "relative_humidity_percent": 97,
@@ -90,7 +90,7 @@
       "source_url": "https://open-meteo.com/",
       "fetched_at": "2026-11-12T23:54:19Z",
       "published_at": "2026-11-13T06:45",
-      "stale": false,
+      "stale": true,
       "current": {
         "temperature_c": 25.5,
         "relative_humidity_percent": 91,
@@ -109,5 +109,9 @@
   ],
   "storms": [],
   "warnings": [],
-  "errors": []
+  "errors": [
+    "Không lấy được dữ liệu cho Hà Nội: sau 4 lần thử vẫn thất bại: <urlopen error _ssl.c:1129: The handshake operation timed out>",
+    "Không lấy được dữ liệu cho Đà Nẵng: sau 4 lần thử vẫn thất bại: <urlopen error _ssl.c:1129: The handshake operation timed out>",
+    "Không lấy được dữ liệu cho TP. Hồ Chí Minh: sau 4 lần thử vẫn thất bại: <urlopen error _ssl.c:1129: The handshake operation timed out>"
+  ]
 }
