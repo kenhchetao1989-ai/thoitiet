@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-15T21:28:13Z",
-  "last_attempt_at": "2026-11-15T21:28:13Z",
-  "last_success_at": "2026-11-15T16:53:26Z",
-  "status": "unavailable",
+  "generated_at": "2026-11-16T01:20:07Z",
+  "last_attempt_at": "2026-11-16T01:20:07Z",
+  "last_success_at": "2026-11-16T01:20:07Z",
+  "status": "ok",
   "provider": {
     "name": "Open-Meteo (tham khảo, không phải nguồn chính thức Việt Nam)",
     "url": "https://open-meteo.com/",
@@ -38,22 +38,22 @@
       "longitude": 105.8542,
       "source_name": "Open-Meteo (tham khảo, không phải nguồn chính thức Việt Nam)",
       "source_url": "https://open-meteo.com/",
-      "fetched_at": "2026-11-15T16:53:26Z",
-      "published_at": "2026-11-15T23:45",
-      "stale": true,
+      "fetched_at": "2026-11-16T01:20:07Z",
+      "published_at": "2026-11-16T08:15",
+      "stale": false,
       "current": {
-        "temperature_c": 23.2,
-        "relative_humidity_percent": 88,
-        "apparent_temperature_c": 25.9,
+        "temperature_c": 25.3,
+        "relative_humidity_percent": 86,
+        "apparent_temperature_c": 28.9,
         "precipitation_mm": 0.0,
-        "weather_code": 1,
-        "wind_speed_kph": 11.6,
-        "wind_direction_deg": 139
+        "weather_code": 3,
+        "wind_speed_kph": 11.8,
+        "wind_direction_deg": 154
       },
       "daily": {
-        "temperature_max_c": 29.0,
-        "temperature_min_c": 19.5,
-        "precipitation_probability_max_percent": 8
+        "temperature_max_c": 31.0,
+        "temperature_min_c": 22.7,
+        "precipitation_probability_max_percent": 20
       }
     },
     {
@@ -63,22 +63,22 @@
       "longitude": 108.2022,
       "source_name": "Open-Meteo (tham khảo, không phải nguồn chính thức Việt Nam)",
       "source_url": "https://open-meteo.com/",
-      "fetched_at": "2026-11-15T16:53:26Z",
-      "published_at": "2026-11-15T23:45",
-      "stale": true,
+      "fetched_at": "2026-11-16T01:20:07Z",
+      "published_at": "2026-11-16T08:15",
+      "stale": false,
       "current": {
-        "temperature_c": 26.0,
-        "relative_humidity_percent": 90,
-        "apparent_temperature_c": 31.3,
+        "temperature_c": 27.5,
+        "relative_humidity_percent": 84,
+        "apparent_temperature_c": 33.1,
         "precipitation_mm": 0.0,
-        "weather_code": 1,
-        "wind_speed_kph": 6.6,
-        "wind_direction_deg": 206
+        "weather_code": 2,
+        "wind_speed_kph": 5.8,
+        "wind_direction_deg": 173
       },
       "daily": {
-        "temperature_max_c": 29.0,
-        "temperature_min_c": 24.2,
-        "precipitation_probability_max_percent": 8
+        "temperature_max_c": 29.6,
+        "temperature_min_c": 24.9,
+        "precipitation_probability_max_percent": 35
       }
     },
     {
@@ -88,30 +88,26 @@
       "longitude": 106.6297,
       "source_name": "Open-Meteo (tham khảo, không phải nguồn chính thức Việt Nam)",
       "source_url": "https://open-meteo.com/",
-      "fetched_at": "2026-11-15T16:53:26Z",
-      "published_at": "2026-11-15T23:45",
-      "stale": true,
+      "fetched_at": "2026-11-16T01:20:07Z",
+      "published_at": "2026-11-16T08:15",
+      "stale": false,
       "current": {
-        "temperature_c": 26.7,
-        "relative_humidity_percent": 89,
-        "apparent_temperature_c": 32.5,
+        "temperature_c": 27.9,
+        "relative_humidity_percent": 83,
+        "apparent_temperature_c": 33.6,
         "precipitation_mm": 0.0,
-        "weather_code": 3,
-        "wind_speed_kph": 4.1,
-        "wind_direction_deg": 195
+        "weather_code": 1,
+        "wind_speed_kph": 5.4,
+        "wind_direction_deg": 360
       },
       "daily": {
-        "temperature_max_c": 30.9,
-        "temperature_min_c": 25.5,
-        "precipitation_probability_max_percent": 78
+        "temperature_max_c": 32.2,
+        "temperature_min_c": 25.1,
+        "precipitation_probability_max_percent": 71
       }
     }
   ],
   "storms": [],
   "warnings": [],
-  "errors": [
-    "Không lấy được dữ liệu cho Hà Nội: sau 4 lần thử vẫn thất bại: HTTP Error 429: Too Many Requests",
-    "Không lấy được dữ liệu cho Đà Nẵng: sau 4 lần thử vẫn thất bại: HTTP Error 429: Too Many Requests",
-    "Không lấy được dữ liệu cho TP. Hồ Chí Minh: sau 4 lần thử vẫn thất bại: HTTP Error 429: Too Many Requests"
-  ]
+  "errors": []
 }
