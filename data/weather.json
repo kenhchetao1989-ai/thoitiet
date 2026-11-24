@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-23T13:05:14Z",
-  "last_attempt_at": "2026-11-23T13:05:14Z",
-  "last_success_at": "2026-11-23T13:05:14Z",
+  "generated_at": "2026-11-24T00:46:44Z",
+  "last_attempt_at": "2026-11-24T00:46:44Z",
+  "last_success_at": "2026-11-24T00:46:44Z",
   "status": "ok",
   "provider": {
     "name": "Open-Meteo (tham khảo, không phải nguồn chính thức Việt Nam)",
@@ -38,22 +38,22 @@
       "longitude": 105.8542,
       "source_name": "Open-Meteo (tham khảo, không phải nguồn chính thức Việt Nam)",
       "source_url": "https://open-meteo.com/",
-      "fetched_at": "2026-11-23T13:05:14Z",
-      "published_at": "2026-11-23T20:00",
+      "fetched_at": "2026-11-24T00:46:44Z",
+      "published_at": "2026-11-24T07:45",
       "stale": false,
       "current": {
-        "temperature_c": 23.9,
-        "relative_humidity_percent": 91,
-        "apparent_temperature_c": 27.8,
-        "precipitation_mm": 0.0,
-        "weather_code": 3,
-        "wind_speed_kph": 7.4,
-        "wind_direction_deg": 84
+        "temperature_c": 17.8,
+        "relative_humidity_percent": 88,
+        "apparent_temperature_c": 17.1,
+        "precipitation_mm": 0.2,
+        "weather_code": 53,
+        "wind_speed_kph": 18.0,
+        "wind_direction_deg": 16
       },
       "daily": {
-        "temperature_max_c": 27.2,
-        "temperature_min_c": 19.0,
-        "precipitation_probability_max_percent": 49
+        "temperature_max_c": 22.9,
+        "temperature_min_c": 17.7,
+        "precipitation_probability_max_percent": 99
       }
     },
     {
@@ -63,22 +63,22 @@
       "longitude": 108.2022,
       "source_name": "Open-Meteo (tham khảo, không phải nguồn chính thức Việt Nam)",
       "source_url": "https://open-meteo.com/",
-      "fetched_at": "2026-11-23T13:05:14Z",
-      "published_at": "2026-11-23T20:00",
+      "fetched_at": "2026-11-24T00:46:44Z",
+      "published_at": "2026-11-24T07:45",
       "stale": false,
       "current": {
-        "temperature_c": 25.3,
-        "relative_humidity_percent": 91,
-        "apparent_temperature_c": 31.1,
-        "precipitation_mm": 0.0,
-        "weather_code": 3,
-        "wind_speed_kph": 0.7,
-        "wind_direction_deg": 14
+        "temperature_c": 25.7,
+        "relative_humidity_percent": 88,
+        "apparent_temperature_c": 31.0,
+        "precipitation_mm": 0.1,
+        "weather_code": 51,
+        "wind_speed_kph": 3.2,
+        "wind_direction_deg": 273
       },
       "daily": {
-        "temperature_max_c": 29.1,
-        "temperature_min_c": 22.4,
-        "precipitation_probability_max_percent": 17
+        "temperature_max_c": 28.7,
+        "temperature_min_c": 23.2,
+        "precipitation_probability_max_percent": 100
       }
     },
     {
@@ -88,22 +88,22 @@
       "longitude": 106.6297,
       "source_name": "Open-Meteo (tham khảo, không phải nguồn chính thức Việt Nam)",
       "source_url": "https://open-meteo.com/",
-      "fetched_at": "2026-11-23T13:05:14Z",
-      "published_at": "2026-11-23T20:00",
+      "fetched_at": "2026-11-24T00:46:44Z",
+      "published_at": "2026-11-24T07:45",
       "stale": false,
       "current": {
-        "temperature_c": 27.9,
-        "relative_humidity_percent": 75,
-        "apparent_temperature_c": 32.6,
+        "temperature_c": 28.6,
+        "relative_humidity_percent": 77,
+        "apparent_temperature_c": 34.5,
         "precipitation_mm": 0.0,
-        "weather_code": 1,
-        "wind_speed_kph": 6.1,
-        "wind_direction_deg": 194
+        "weather_code": 0,
+        "wind_speed_kph": 1.6,
+        "wind_direction_deg": 297
       },
       "daily": {
-        "temperature_max_c": 33.1,
-        "temperature_min_c": 25.0,
-        "precipitation_probability_max_percent": 55
+        "temperature_max_c": 34.7,
+        "temperature_min_c": 25.7,
+        "precipitation_probability_max_percent": 94
       }
     }
   ],
